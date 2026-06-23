@@ -1,61 +1,57 @@
-import React, { useState } from 'react'
-import Layout from './components/Layout.jsx'
-import ScenarioInput from './components/ScenarioInput.jsx'
-import CameraFeed from './components/CameraFeed.jsx'
-import Scene from './scene/Scene.jsx'
-import RecordingControls from './components/RecordingControls.jsx'
-import Recorder from './components/Recorder.jsx'
+import { useState } from "react";
+import CameraFeed from "./components/CameraFeed";
+import Recorder from "./components/Recorder";
+import Scene from "./scene/Scene";
 
 export default function App() {
-  const [activeScenario, setActiveScenario] = useState('')
-  const [stream, setStream] = useState(null)
-  const [aiResponse, setAiResponse] = useState(null)
-  const [isRecording, setIsRecording] = useState(false)
-  const [hasRecording, setHasRecording] = useState(false)
+  const [scenario, setScenario] = useState("");
+  const [aiResponse, setAiResponse] = useState("");
+  const [stream, setStream] = useState(null);
 
-  function handleStart(scenarioText) {
-    setActiveScenario(scenarioText)
-  }
+  async function startSession() {
+    if (!scenario.trim()) {
+      alert("Please enter a scenario first.");
+      return;
+    }
 
-  function handleRecordStart() {
-    setIsRecording(true)
-  }
-
-  function handleRecordStop() {
-    setIsRecording(false)
-    setHasRecording(true)
-  }
-
-  function handleDownload() {
-    // Placeholder: real download logic lives in the recording pipeline (M1)
-    alert('Download triggered — recording pipeline not yet connected.')
+    // TEMP AI RESPONSE (mock)
+    setAiResponse("Thanks for explaining. Can you tell me more about how long this has been happening?");
   }
 
   return (
-    <Layout>
-      <div className="mx-auto w-full max-w-5xl flex-1 p-4 lg:p-6">
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          {/* Left column */}
-          <div className="flex flex-col gap-4">
-            <ScenarioInput onStart={handleStart} />
+    <div className="p-6 max-w-5xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Virtual Client Interaction</h1>
+
+      <div className="grid grid-cols-2 gap-6">
+        
+        {/* LEFT SIDE */}
+        <div>
+          <h2 className="font-semibold mb-2">Scenario</h2>
+          <textarea
+            className="w-full border p-2 rounded"
+            placeholder="Describe the client scenario..."
+            value={scenario}
+            onChange={(e) => setScenario(e.target.value)}
+          />
+
+          <button
+            onClick={startSession}
+            className="mt-3 bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Start Session
+          </button>
+
+          <div className="mt-4">
             <CameraFeed onStreamReady={setStream} />
           </div>
+        </div>
 
-          {/* Right column */}
-          <div className="flex flex-col gap-4">
-            <Scene scenario={activeScenario} aiResponse={aiResponse} />
-            <RecordingControls
-              onStart={handleRecordStart}
-              onStop={handleRecordStop}
-              onDownload={hasRecording ? handleDownload : undefined}
-              isRecording={isRecording}
-            />
-            <div className="pt-2">
-              <Recorder stream={stream} />
-            </div>
-          </div>
+        {/* RIGHT SIDE */}
+        <div>
+          <Scene scenario={scenario} aiResponse={aiResponse} />
+          <Recorder stream={stream} />
         </div>
       </div>
-    </Layout>
-  )
+    </div>
+  );
 }

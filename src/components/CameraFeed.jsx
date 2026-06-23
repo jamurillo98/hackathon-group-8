@@ -5,22 +5,15 @@ export default function CameraFeed({ onStreamReady }) {
 
   useEffect(() => {
     async function enableCamera() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true
-        });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-        if (typeof onStreamReady === "function") onStreamReady(stream);
-      } catch (err) {
-        console.error("Camera error:", err);
-      }
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      });
+      videoRef.current.srcObject = stream;
+      onStreamReady(stream);
     }
-
     enableCamera();
-  }, [onStreamReady]);
+  }, []);
 
   return (
     <video

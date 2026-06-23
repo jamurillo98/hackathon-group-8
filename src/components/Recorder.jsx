@@ -7,7 +7,10 @@ export default function Recorder({ stream }) {
   const [downloadUrl, setDownloadUrl] = useState(null);
 
   function startRecording() {
-    if (!stream) return;
+    if (!stream) {
+      console.error("No stream available for recording");
+      return;
+    }
 
     mediaRecorderRef.current = new MediaRecorder(stream);
     recordedChunks.current = [];
@@ -27,10 +30,10 @@ export default function Recorder({ stream }) {
   }
 
   function stopRecording() {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+    if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
+      setRecording(false);
     }
-    setRecording(false);
   }
 
   function download() {
