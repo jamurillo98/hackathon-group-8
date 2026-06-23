@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Layout from './components/Layout.jsx'
 import ScenarioInput from './components/ScenarioInput.jsx'
 import CameraFeed from './components/CameraFeed.jsx'
-import FigurineScene from './components/FigurineScene.jsx'
+import Scene from './scene/Scene.jsx'
 import RecordingControls from './components/RecordingControls.jsx'
 
 export default function App() {
@@ -40,7 +40,7 @@ export default function App() {
 
           {/* Right column */}
           <div className="flex flex-col gap-4">
-            <FigurineScene scenario={activeScenario} />
+            <Scene scenario={activeScenario} />
             <RecordingControls
               onStart={handleRecordStart}
               onStop={handleRecordStop}
