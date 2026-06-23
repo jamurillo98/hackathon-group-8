@@ -35,7 +35,7 @@ export default function App() {
           {/* Left column */}
           <div className="flex flex-col gap-4">
             <ScenarioInput onStart={handleStart} />
-            <CameraFeed stream={null} />
+            <CameraFeed />
           </div>
 
           {/* Right column */}
