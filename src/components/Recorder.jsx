@@ -38,7 +38,20 @@ export default function Recorder({ stream }) {
     const a = document.createElement("a");
     a.href = downloadUrl;
     a.download = "session-recording.webm";
+    // append to DOM so click works reliably in all browsers
+    document.body.appendChild(a);
     a.click();
+    a.remove();
+
+    // revoke the object URL after a delay to ensure download started
+    setTimeout(() => {
+      try {
+        URL.revokeObjectURL(downloadUrl);
+      } catch (e) {
+        // ignore
+      }
+      setDownloadUrl(null);
+    }, 1500);
   }
 
   return (
