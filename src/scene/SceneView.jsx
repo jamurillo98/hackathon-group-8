@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { initScene, startLoop, stopLoop, setAnimatorUpdate, getScene } from './scene.js'
+import { initScene, startLoop, stopLoop, setAnimatorUpdate, getScene, getRenderer, getCamera } from './scene.js'
 import { createClientFigure, createStudentFigure } from './figures.js'
 import { initAnimator, setMood, startSpeaking, stopSpeaking, update } from './animator.js'
 
@@ -16,11 +16,11 @@ export default function SceneView({ scenario, mood = 'calm', speaking = false })
   const canvasRef = useRef(null)
   const initialised = useRef(false)
 
-  // ── Mount: initialise the Three.js scene once ──────────────────────────────
+  // ── Mount: initialise the Three.js scene ───────────────────────────────────
+  // React StrictMode mounts effects twice in dev. We must (re)build and
+  // (re)start the loop on EVERY mount and clean up fully on EVERY unmount, or the
+  // second mount leaves a dead render loop and a blank canvas.
   useEffect(() => {
-    if (initialised.current) return
-    initialised.current = true
-
     const canvas = canvasRef.current
     initScene(canvas)
 
@@ -34,8 +34,11 @@ export default function SceneView({ scenario, mood = 'calm', speaking = false })
     setAnimatorUpdate(update)
     startLoop()
 
-    // Cleanup on unmount
-    return () => stopLoop()
+    return () => {
+      stopLoop()
+      threeScene.remove(clientFigure)
+      threeScene.remove(studentFigure)
+    }
   }, [])
 
   // ── Sync mood prop → animator ──────────────────────────────────────────────

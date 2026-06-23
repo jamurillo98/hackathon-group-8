@@ -36,7 +36,10 @@ export function initScene(canvasElement) {
   try {
     renderer = new THREE.WebGLRenderer({ canvas: canvasElement, antialias: true, alpha: false })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    renderer.setSize(canvasElement.clientWidth, canvasElement.clientHeight)
+    // Fall back to sensible defaults if the canvas has not been laid out yet (flex race).
+    const w0 = canvasElement.clientWidth  || 640
+    const h0 = canvasElement.clientHeight || 360
+    renderer.setSize(w0, h0, false)
   } catch {
     const msg = document.createTextNode(
       'Your browser does not support WebGL. Please use Chrome or Edge.'
@@ -50,12 +53,12 @@ export function initScene(canvasElement) {
 
   camera = new THREE.PerspectiveCamera(
     45,
-    canvasElement.clientWidth / canvasElement.clientHeight,
+    (canvasElement.clientWidth || 640) / (canvasElement.clientHeight || 360),
     0.1,
     100
   )
-  camera.position.set(0, 1.8, 7)
-  camera.lookAt(0, 1.2, 0)
+  camera.position.set(0, 0.15, 3.6)
+  camera.lookAt(0, 0.15, 0)
 
   const ambient = new THREE.AmbientLight(0xffffff, 0.65)
   scene.add(ambient)
@@ -87,6 +90,19 @@ export function startLoop() {
   function tick(now) {
     const delta = Math.min((now - lastTime) / 1000, 0.1)
     lastTime = now
+    // Keep the renderer matched to the canvas size each frame (handles the flex
+    // layout settling after mount without needing a window resize event).
+    if (canvasEl) {
+      const w = canvasEl.clientWidth, h = canvasEl.clientHeight
+      if (w > 0 && h > 0) {
+        const size = renderer.getSize(new THREE.Vector2())
+        if (Math.abs(size.x - w) > 1 || Math.abs(size.y - h) > 1) {
+          renderer.setSize(w, h, false)
+          camera.aspect = w / h
+          camera.updateProjectionMatrix()
+        }
+      }
+    }
     if (animatorUpdateFn) animatorUpdateFn(delta)
     renderer.render(scene, camera)
     rafHandle = requestAnimationFrame(tick)
@@ -98,6 +114,9 @@ export function startLoop() {
 export function stopLoop() {
   cancelAnimationFrame(rafHandle)
   running = false
+  // Dispose the renderer so a StrictMode remount can cleanly create a new one
+  // on the same canvas without leaving a dead WebGL context behind.
+  if (renderer) { try { renderer.dispose() } catch {} renderer = null }
 }
 
 export function getScene()    { return scene    }

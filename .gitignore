@@ -1,2 +1,7 @@
-.kiro/
-.vscode/
+node_modules/
+dist/
+.env
+.env.*
+.vercel
+.DS_Store
+localapi.mjs
