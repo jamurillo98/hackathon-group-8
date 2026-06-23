@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "scripts": {
+    "test": "node scene/verify.js",
+    "verify": "node scene/verify.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.44.0",
+    "fast-check": "3.19.0",
+    "serve": "14.2.3"
+  }
+}
