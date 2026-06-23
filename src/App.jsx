@@ -2,6 +2,7 @@ import { useState } from "react";
 import CameraFeed from "./components/CameraFeed";
 import Recorder from "./components/Recorder";
 import Scene from "./scene/Scene";
+import SpeechInput from "./components/SpeechInput";
 
 export default function App() {
   const [scenario, setScenario] = useState("");
@@ -14,8 +15,14 @@ export default function App() {
       return;
     }
 
-    // TEMP AI RESPONSE (mock)
-    setAiResponse("Thanks for explaining. Can you tell me more about how long this has been happening?");
+    setAiResponse("Thanks for explaining. How can I help you today?");
+  }
+
+  async function handleUserSpeech(transcript) {
+    // Mock AI response for hackathon
+    setAiResponse(
+      "I hear you. " + transcript + " — can you tell me a bit more about how you're feeling?"
+    );
   }
 
   return (
@@ -49,6 +56,7 @@ export default function App() {
         {/* RIGHT SIDE */}
         <div>
           <Scene scenario={scenario} aiResponse={aiResponse} />
+          <SpeechInput onTranscript={handleUserSpeech} />
           <Recorder stream={stream} />
         </div>
       </div>

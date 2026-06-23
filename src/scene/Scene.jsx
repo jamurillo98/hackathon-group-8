@@ -7,7 +7,7 @@ export default function Scene({ scenario, aiResponse }) {
           {aiResponse
             ? aiResponse
             : scenario
-            ? "Hello, I'm your virtual client."
+            ? "Hello, I'm your virtual client. Tell me what's going on."
             : "Waiting for session..."}
         </p>
       </div>
