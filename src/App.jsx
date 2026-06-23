@@ -4,6 +4,7 @@ import ScenarioInput from './components/ScenarioInput.jsx'
 import CameraFeed from './components/CameraFeed.jsx'
 import Scene from './scene/Scene.jsx'
 import RecordingControls from './components/RecordingControls.jsx'
+import Recorder from './components/Recorder.jsx'
 
 export default function App() {
   const [activeScenario, setActiveScenario] = useState('')
@@ -47,6 +48,9 @@ export default function App() {
               onDownload={hasRecording ? handleDownload : undefined}
               isRecording={isRecording}
             />
+            <div className="pt-2">
+              <Recorder />
+            </div>
           </div>
         </div>
       </div>
