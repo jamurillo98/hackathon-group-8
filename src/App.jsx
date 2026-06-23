@@ -9,6 +9,7 @@ import Recorder from './components/Recorder.jsx'
 export default function App() {
   const [activeScenario, setActiveScenario] = useState('')
   const [stream, setStream] = useState(null)
+  const [aiResponse, setAiResponse] = useState(null)
   const [isRecording, setIsRecording] = useState(false)
   const [hasRecording, setHasRecording] = useState(false)
 
@@ -42,7 +43,7 @@ export default function App() {
 
           {/* Right column */}
           <div className="flex flex-col gap-4">
-            <Scene scenario={activeScenario} />
+            <Scene scenario={activeScenario} aiResponse={aiResponse} />
             <RecordingControls
               onStart={handleRecordStart}
               onStop={handleRecordStop}
