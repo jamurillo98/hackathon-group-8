@@ -8,6 +8,7 @@ import Recorder from './components/Recorder.jsx'
 
 export default function App() {
   const [activeScenario, setActiveScenario] = useState('')
+  const [stream, setStream] = useState(null)
   const [isRecording, setIsRecording] = useState(false)
   const [hasRecording, setHasRecording] = useState(false)
 
@@ -36,7 +37,7 @@ export default function App() {
           {/* Left column */}
           <div className="flex flex-col gap-4">
             <ScenarioInput onStart={handleStart} />
-            <CameraFeed />
+            <CameraFeed onStreamReady={setStream} />
           </div>
 
           {/* Right column */}
@@ -49,7 +50,7 @@ export default function App() {
               isRecording={isRecording}
             />
             <div className="pt-2">
-              <Recorder />
+              <Recorder stream={stream} />
             </div>
           </div>
         </div>
