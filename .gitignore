@@ -1,2 +1,7 @@
 .kiro/
 .vscode/
+.env
+.env.local
+node_modules/
+.vite/
+dist/
