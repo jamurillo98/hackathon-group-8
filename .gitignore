@@ -2,6 +2,10 @@
 .vscode/
 .env
 .env.local
+.env.*
 node_modules/
 .vite/
 dist/
+.vercel/
+.DS_Store
+localapi.mjs
